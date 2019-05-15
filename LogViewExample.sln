@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogViewExample", "LogViewExample.csproj", "{12072B77-4B80-4794-ACF0-707EEA7C3482}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12072B77-4B80-4794-ACF0-707EEA7C3482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12072B77-4B80-4794-ACF0-707EEA7C3482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12072B77-4B80-4794-ACF0-707EEA7C3482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12072B77-4B80-4794-ACF0-707EEA7C3482}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7927560-7CCD-4B05-A9C9-BE42093E67A0}
+	EndGlobalSection
+EndGlobal

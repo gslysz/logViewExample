@@ -12,13 +12,15 @@ namespace LogViewExample
         /// </summary>
         private ILogService _logService;
 
+        private const int MaxLogSize = 1000000;
+
         #region Constructors
 
         public LogViewModel(ILogService logService)
         {
             _logService = logService;
 
-            List<LogEntry> initialLogEntries = _logService.GetLogEntries();
+            List<LogEntry> initialLogEntries = _logService.GetRecentLogEntries();
             
             LogEntries = new ObservableCollection<LogEntry>(initialLogEntries);
 
@@ -57,6 +59,10 @@ namespace LogViewExample
 
             current.Dispatcher.BeginInvoke((Action)(() =>
             {
+
+                if (LogEntries.Count > MaxLogSize)
+                    LogEntries.RemoveAt(0);
+
                 LogEntries.Add(e);
             }));
         }

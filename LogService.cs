@@ -49,6 +49,12 @@
         }
 
 
+        public List<LogEntry> GetRecentLogEntries(int numEntries = 1000)
+        {
+            return new List<LogEntry>(_logEntries.Skip(_logEntries.Count - numEntries).Take(numEntries));
+        }
+
+
         public void Dispose()
         {
             Dispose(true);
@@ -67,9 +73,9 @@
             ReceivedLogEntry?.Invoke(this, randomEntry);
         }
 
-        private LogEntry GetRandomEntry()
+        private LogEntry GetRandomEntry(int start=1, int stop=10)
         {
-            if (_random.Next(1, 10) > 1)
+            if (_random.Next(start, stop) > 1)
             {
                 return new LogEntry()
                 {
@@ -87,7 +93,7 @@
                 Message = string.Join(" ", Enumerable.Range(5, _random.Next(10, 50))
                     .Select(x => _words[_random.Next(0, _maxWord)])),
                 Contents = Enumerable.Range(5, _random.Next(5, 10))
-                    .Select(i => GetRandomEntry())
+                    .Select(i => GetRandomEntry(2,10))
                     .ToList()
             };
 

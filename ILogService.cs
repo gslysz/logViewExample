@@ -12,5 +12,12 @@ namespace LogViewExample
         event EventHandler<LogEntry> ReceivedLogEntry;
 
         List<LogEntry> GetLogEntries();
+
+        /// <summary>
+        /// Gets the most recent n-number of log entries
+        /// </summary>
+        /// <param name="numEntries"></param>
+        /// <returns></returns>
+        List<LogEntry> GetRecentLogEntries(int numEntries = 1000);
     }
 }

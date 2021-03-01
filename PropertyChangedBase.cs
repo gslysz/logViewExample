@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace LogViewExample
@@ -8,13 +9,9 @@ namespace LogViewExample
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyname = null)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                PropertyChangedEventHandler handler = PropertyChanged;
-                if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-            }));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
         }
     }
 }

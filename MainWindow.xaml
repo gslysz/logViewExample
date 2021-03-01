@@ -88,10 +88,10 @@
     </Window.Resources>
 
     <DockPanel>
-        <TextBlock Text="{Binding Count, StringFormat='{}{0} Items'}"
+        <TextBlock Text="{Binding LogEntries.Count, StringFormat='{}{0} Items'}"
                DockPanel.Dock="Top"/>
 
-        <ItemsControl ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}">
+        <ItemsControl ItemsSource="{Binding LogEntries}" Style="{StaticResource LogViewerStyle}">
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer CanContentScroll="True">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 
 namespace LogViewExample
@@ -6,37 +7,27 @@ namespace LogViewExample
     /// <summary>
     /// Represents a single log entry
     /// </summary>
-    public class LogEntry : PropertyChangedBase
+    public class LogEntry : ObservableObject
     {
-        private DateTime _dateTime;
-        private int _index;
         private string message;
+
+
+        internal LogEntry(int index, DateTime dateTime)
+        {
+            DateTime = dateTime;
+            Index = index;
+        }
+
 
         /// <summary>
         /// The date/time of the log entry
         /// </summary>
-        public DateTime DateTime
-        {
-            get => _dateTime;
-            set
-            {
-                _dateTime = value;
-                OnPropertyChanged();
-            }
-        }
+        public DateTime DateTime { get; }
 
         /// <summary>
         /// Log entry identifier
         /// </summary>
-        public int Index
-        {
-            get => _index;
-            set
-            {
-                _index = value;
-                OnPropertyChanged();
-            }
-        }
+        public int Index { get; }
 
         /// <summary>
         /// Log message
@@ -47,20 +38,33 @@ namespace LogViewExample
             set
             {
                 message = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public List<LogEntry> Contents { get; set; }
+        public List<LogEntry> ChildLogEntries { get; set; }
 
-        public virtual bool HasChildren => Contents != null && Contents.Count > 0;
+        public bool HasChildren => ChildLogEntries != null && ChildLogEntries.Count > 0;
+
+
+        public static LogEntry Create(bool hasChildLogEntries,  int index, DateTime dateTime)
+        {
+            if (hasChildLogEntries)
+                return new CollapsibleLogEntry(index, dateTime);
+            else
+                return new LogEntry(index, dateTime);
+        }
+
     }
 
     /// <summary>
-    /// Log entry that contains child log enti
+    /// Log entry that contains child log entries
     /// </summary>
     public class CollapsibleLogEntry : LogEntry
     {
-        
+        internal CollapsibleLogEntry(int index, DateTime dateTime) : base(index, dateTime)
+        {
+        }
     }
+
 }

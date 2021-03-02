@@ -9,14 +9,40 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:LogViewModel}"
         Title="LogViewer" Height="450" Width="800">
-    <TabControl>
-        <TabItem Header="Standard">
-            <local:DataGridLogView></local:DataGridLogView>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        </TabItem>
-        <TabItem Header="Raw">
-            <local:RawLogView></local:RawLogView>
-        </TabItem>
+        <GroupBox Header="Search the log:" HorizontalAlignment="Left" Margin="0,5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" >
+
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200" MaxLength="200"></TextBox>
+                    <Button Content="Reset" Margin="5,0" Command="{Binding ClearSearchCommand}"></Button>
+
+                </StackPanel>
+
+                <TextBlock Text="{Binding FilteredLogEntries.Count, StringFormat='{}{0} Items'}"
+               DockPanel.Dock="Top"/>
+
+            </StackPanel>
+            
+        </GroupBox>
         
-    </TabControl>
+        
+        <TabControl Grid.Row="1">
+            <TabItem Header="Standard">
+                <local:DataGridLogView></local:DataGridLogView>
+
+            </TabItem>
+            <TabItem Header="Raw">
+                <local:RawLogView></local:RawLogView>
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
+    
 </mah:MetroWindow>

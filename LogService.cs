@@ -73,29 +73,23 @@
             ReceivedLogEntry?.Invoke(this, randomEntry);
         }
 
-        private LogEntry GetRandomEntry(int start=1, int stop=10)
+        private LogEntry GetRandomEntry(int start = 1, int stop = 10)
         {
-            if (_random.Next(start, stop) > 1)
+            bool hasChildEntries = _random.Next(start, stop) < 2;
+
+            LogEntry logEntry = LogEntry.Create(hasChildEntries, _index++, DateTime.Now);
+
+            logEntry.Message = string.Join(" ", Enumerable.Range(5, _random.Next(10, 50))
+                        .Select(x => _words[_random.Next(0, _maxWord)]));
+
+            if (hasChildEntries)
             {
-                return new LogEntry()
-                {
-                    Index = _index++,
-                    DateTime = DateTime.Now,
-                    Message = string.Join(" ", Enumerable.Range(5, _random.Next(10, 50))
-                        .Select(x => _words[_random.Next(0, _maxWord)])),
-                };
+                logEntry.ChildLogEntries = Enumerable.Range(5, _random.Next(5, 10))
+                    .Select(i => GetRandomEntry(2, 10))
+                    .ToList();
             }
 
-            return new CollapsibleLogEntry()
-            {
-                Index = _index++,
-                DateTime = DateTime.Now,
-                Message = string.Join(" ", Enumerable.Range(5, _random.Next(10, 50))
-                    .Select(x => _words[_random.Next(0, _maxWord)])),
-                Contents = Enumerable.Range(5, _random.Next(5, 10))
-                    .Select(i => GetRandomEntry(2,10))
-                    .ToList()
-            };
+            return logEntry;
 
         }
 

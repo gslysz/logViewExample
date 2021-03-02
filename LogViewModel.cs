@@ -9,6 +9,9 @@ using GalaSoft.MvvmLight.Command;
 
 namespace LogViewExample
 {
+    /// <summary>
+    /// Main viewModel for log entries
+    /// </summary>
     public class LogViewModel : ObservableObject, IDisposable
     {
         /// <summary>
@@ -18,7 +21,12 @@ namespace LogViewExample
         private List<LogEntry> _logEntries;
         private string _searchText;
         private ObservableCollection<LogEntry> filteredLogEntries;
-        private const int MaxLogSize = 1000000;
+        private object _logEntryLockObject = new object();
+        
+        /// <summary>
+        /// Maximum log size. If the log exceeds this value, oldest items are removed from the log
+        /// </summary>
+        private const int MaxLogSize = 100000;
 
         #region Constructors
 
@@ -26,7 +34,8 @@ namespace LogViewExample
         {
             _logService = logService;
 
-            _logEntries = _logService.GetRecentLogEntries();
+            //Get the 10,000 most recent entries
+            _logEntries = _logService.GetRecentLogEntries(10000);
 
             UpdateFilteredLogEntries();
 
@@ -41,10 +50,14 @@ namespace LogViewExample
 
         #region Properties
 
+        /// <summary>
+        /// Clears the search field
+        /// </summary>
         public ICommand ClearSearchCommand { get; set; }
 
-        public ObservableCollection<LogEntry> LogEntries { get; set; }
-
+        /// <summary>
+        /// Log entries
+        /// </summary>
         public ObservableCollection<LogEntry> FilteredLogEntries
         {
             get => filteredLogEntries;
@@ -55,6 +68,9 @@ namespace LogViewExample
             }
         }
 
+        /// <summary>
+        /// Search text used for filtering log entries (based on message)
+        /// </summary>
         public string SearchText
         {
             get => _searchText;
@@ -68,14 +84,6 @@ namespace LogViewExample
             }
         }
 
-        private void UpdateFilteredLogEntries()
-        {
-            if (string.IsNullOrWhiteSpace(SearchText))
-                FilteredLogEntries = new ObservableCollection<LogEntry>(_logEntries);
-            else
-                FilteredLogEntries = new ObservableCollection<LogEntry>(_logEntries.Where(p => p.Message.Contains(_searchText)));
-
-        }
 
         #endregion
 
@@ -100,31 +108,52 @@ namespace LogViewExample
 
         }
 
+        private void UpdateFilteredLogEntries()
+        {
+            lock (_logEntryLockObject)
+            {
+                if (string.IsNullOrWhiteSpace(SearchText))
+                    FilteredLogEntries = new ObservableCollection<LogEntry>(_logEntries);
+                else
+                    FilteredLogEntries = new ObservableCollection<LogEntry>(_logEntries.Where(p => p.Message.Contains(_searchText)));
+            }
+
+        }
+
+
         private void LogService_ReceivedLogEntry(object sender, LogEntry e)
         {
 
             bool shouldFilter = !string.IsNullOrWhiteSpace(SearchText);
 
-            _logEntries.Add(e);
-
-            if (_logEntries.Count > MaxLogSize)
-                _logEntries.RemoveAt(0);
-
-            Application current = Application.Current;
-            if (current == null)
-                return;
-
-            current.Dispatcher.BeginInvoke((Action)(() =>
+            lock (_logEntryLockObject)
             {
-                bool shouldAdd = true;
+                _logEntries.Add(e);
 
-                if (shouldFilter)
-                    shouldAdd = e.Message.Contains(SearchText);
+                if (_logEntries.Count > MaxLogSize)
+                    _logEntries.RemoveAt(0);
 
-                if (shouldAdd)
-                    FilteredLogEntries.Add(e);
-                
-            }));
+                Application current = Application.Current;
+                if (current == null)
+                    return;
+
+                current.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    bool shouldAdd = true;
+
+                    if (shouldFilter)
+                        shouldAdd = e.Message.Contains(SearchText);
+
+                    if (shouldAdd)
+                        FilteredLogEntries.Add(e);
+
+                    if (FilteredLogEntries.Count > MaxLogSize)
+                        FilteredLogEntries.RemoveAt(0);
+
+                }));
+            }
+
+            
         }
 
         protected void Dispose(bool disposing)

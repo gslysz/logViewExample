@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
 
 namespace LogViewExample
 {
+    [Obsolete("Remove this later. Instead use MVVMlite framework")]
     public class PropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

@@ -10,14 +10,14 @@
     <UserControl.Resources>
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <local:VisibilityToNullableBooleanConverter x:Key="VisToNullableBoolConverter" />
-
+        
         <CollectionViewSource x:Key="logEntriesViewSource" Source="{Binding FilteredLogEntries}" >
             <CollectionViewSource.SortDescriptions>
                 <componentmodel:SortDescription PropertyName="DateTime" Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
+        <!-- Child log entries itemsControl Style -->
         <Style TargetType="ItemsControl" x:Key="LogViewerStyle">
             <Setter Property="Template">
                 <Setter.Value>
@@ -38,6 +38,7 @@
             </Setter>
         </Style>
 
+        <!-- DataTemplate for a logEntry - used for child log entries -->
         <DataTemplate DataType="{x:Type local:LogEntry}">
             <Grid IsSharedSizeScope="True" Margin="20,0,0,0">
                 <Grid.ColumnDefinitions>
@@ -59,24 +60,10 @@
 
     </UserControl.Resources>
 
+    <!-- Main Grid -->
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
-        <!-- Search box-->
-        <GroupBox Header="Search the log:" HorizontalAlignment="Left" >
-            <StackPanel Orientation="Horizontal" >
-
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200"></TextBox>
-                <Button Content="Reset" Margin="5,0" Command="{Binding ClearSearchCommand}"></Button>
-
-            </StackPanel>
-        </GroupBox>
-
         <!-- Log entries -->
-        <GroupBox Grid.Row="1" Header="Log Entries:">
+        <GroupBox Header="Log Entries:">
             <DataGrid Grid.Row="1" ItemsSource="{Binding Source={StaticResource logEntriesViewSource}}" AutoGenerateColumns="False">
 
                 <DataGrid.RowStyle>
@@ -98,6 +85,7 @@
 
                 </DataGrid.Columns>
 
+                <!-- Template for Child log entries -->
                 <DataGrid.RowDetailsTemplate>
                     <DataTemplate >
                         <Grid IsSharedSizeScope="True" Visibility="{Binding HasChildren, Converter={StaticResource BoolToVis}}">
@@ -113,7 +101,7 @@
                             </Grid.RowDefinitions>
 
 
-                            <ItemsControl ItemsSource="{Binding Contents}" Style="{StaticResource LogViewerStyle}"
+                            <ItemsControl ItemsSource="{Binding ChildLogEntries}" Style="{StaticResource LogViewerStyle}"
                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                           x:Name="Contents" />
 

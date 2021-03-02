@@ -72,7 +72,7 @@
                 <ToggleButton x:Name="Expander" Grid.Row="1" Grid.Column="0"
                           VerticalAlignment="Top" Content="+" HorizontalAlignment="Right"/>
 
-                <ItemsControl ItemsSource="{Binding Contents}" Style="{StaticResource LogViewerStyle}"
+                <ItemsControl ItemsSource="{Binding ChildLogEntries}" Style="{StaticResource LogViewerStyle}"
                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                           x:Name="Contents" Visibility="Collapsed"/>
 
@@ -87,9 +87,6 @@
 
     </UserControl.Resources>
     <DockPanel>
-        <TextBlock Text="{Binding FilteredLogEntries.Count, StringFormat='{}{0} Items'}"
-               DockPanel.Dock="Top"/>
-
         <ItemsControl ItemsSource="{Binding FilteredLogEntries}" Style="{StaticResource LogViewerStyle}">
             <ItemsControl.Template>
                 <ControlTemplate>

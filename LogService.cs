@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading;
     using System;
+    using System.IO;
 
     /// <inheritdoc/>
     public class LogService : ILogService, IDisposable
@@ -14,7 +15,8 @@
         private int _index;
         private string _testData = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
         private List<string> _words;
-        private List<LogEntry> _logEntries = new List<LogEntry>();
+        protected List<LogEntry> _logEntries = new List<LogEntry>();
+        private StreamWriter _writer;
 
         #region Constructors
 
@@ -29,6 +31,8 @@
             Enumerable.Range(0, 200000)
                .ToList()
                .ForEach(x => _logEntries.Add(GetRandomEntry()));
+
+            
         }
 
         #endregion
@@ -43,13 +47,13 @@
 
         #region Public Methods
 
-        public List<LogEntry> GetLogEntries()
+        public virtual List<LogEntry> GetLogEntries()
         {
             return new List<LogEntry>(_logEntries);
         }
 
 
-        public List<LogEntry> GetRecentLogEntries(int numEntries = 1000)
+        public virtual List<LogEntry> GetRecentLogEntries(int numEntries = 1000)
         {
             return new List<LogEntry>(_logEntries.Skip(_logEntries.Count - numEntries).Take(numEntries));
         }
@@ -89,6 +93,8 @@
                     .ToList();
             }
 
+            _writer?.WriteLine(logEntry.Message);
+
             return logEntry;
 
         }
@@ -100,6 +106,9 @@
 
             _timer.Dispose();
             _timer = null;
+
+            _writer.Flush();
+            _writer.Dispose();
         }
 
 

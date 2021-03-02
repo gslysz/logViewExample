@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogViewExample"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-             
+        SaveWindowPosition="True"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:LogViewModel}"
-        Title="LogViewer" Height="450" Width="800">
+        Title="LogViewer" MinHeight="450" MinWidth="800">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

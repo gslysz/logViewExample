@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="LogViewExample.DataGridLogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LogViewExample" xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:LogViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <local:VisibilityToNullableBooleanConverter x:Key="VisToNullableBoolConverter" />
+
+        <CollectionViewSource x:Key="logEntriesViewSource" Source="{Binding FilteredLogEntries}" >
+            <CollectionViewSource.SortDescriptions>
+                <componentmodel:SortDescription PropertyName="DateTime" Direction="Descending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <Style TargetType="ItemsControl" x:Key="LogViewerStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <ScrollViewer CanContentScroll="True">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type local:LogEntry}">
+            <Grid IsSharedSizeScope="True" Margin="20,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>
+                    <ColumnDefinition SharedSizeGroup="Date" Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding DateTime}" Grid.Column="0"
+                       FontWeight="Bold" Margin="5,0,5,0"/>
+
+                <TextBlock Text="{Binding Index}" Grid.Column="1"
+                       FontWeight="Bold" Margin="0,0,2,0" />
+
+                <TextBlock Text="{Binding Message}" Grid.Column="2"
+                       TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <!-- Search box-->
+        <GroupBox Header="Search the log:" HorizontalAlignment="Left" >
+            <StackPanel Orientation="Horizontal" >
+
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200"></TextBox>
+                <Button Content="Reset" Margin="5,0" Command="{Binding ClearSearchCommand}"></Button>
+
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Log entries -->
+        <GroupBox Grid.Row="1" Header="Log Entries:">
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Source={StaticResource logEntriesViewSource}}" AutoGenerateColumns="False">
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="DetailsVisibility" Value="{Binding HasChildren, Converter={StaticResource BoolToVis}}" />
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Time" Binding="{Binding DateTime, StringFormat=G}" IsReadOnly="True" ></DataGridTextColumn>
+                    <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" ></DataGridTextColumn>
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                </DataGrid.Columns>
+
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate >
+                        <Grid IsSharedSizeScope="True" Visibility="{Binding HasChildren, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>
+                                <ColumnDefinition SharedSizeGroup="Date" Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+
+                            <ItemsControl ItemsSource="{Binding Contents}" Style="{StaticResource LogViewerStyle}"
+                          Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                          x:Name="Contents" />
+
+                        </Grid>
+
+                    </DataTemplate>
+
+                </DataGrid.RowDetailsTemplate>
+
+            </DataGrid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

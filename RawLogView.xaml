@@ -87,10 +87,10 @@
 
     </UserControl.Resources>
     <DockPanel>
-        <TextBlock Text="{Binding LogEntries.Count, StringFormat='{}{0} Items'}"
+        <TextBlock Text="{Binding FilteredLogEntries.Count, StringFormat='{}{0} Items'}"
                DockPanel.Dock="Top"/>
 
-        <ItemsControl ItemsSource="{Binding LogEntries}" Style="{StaticResource LogViewerStyle}">
+        <ItemsControl ItemsSource="{Binding FilteredLogEntries}" Style="{StaticResource LogViewerStyle}">
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer CanContentScroll="True">

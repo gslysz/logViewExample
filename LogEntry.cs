@@ -18,7 +18,7 @@ namespace LogViewExample
         public DateTime DateTime
         {
             get => _dateTime;
-            internal set
+            set
             {
                 _dateTime = value;
                 OnPropertyChanged();
@@ -31,7 +31,7 @@ namespace LogViewExample
         public int Index
         {
             get => _index;
-            internal set
+            set
             {
                 _index = value;
                 OnPropertyChanged();
@@ -44,12 +44,16 @@ namespace LogViewExample
         public string Message
         {
             get => message;
-            internal set
+            set
             {
                 message = value;
                 OnPropertyChanged();
             }
         }
+
+        public List<LogEntry> Contents { get; set; }
+
+        public virtual bool HasChildren => Contents != null && Contents.Count > 0;
     }
 
     /// <summary>
@@ -57,6 +61,6 @@ namespace LogViewExample
     /// </summary>
     public class CollapsibleLogEntry : LogEntry
     {
-        public List<LogEntry> Contents { get; set; }
+        
     }
 }

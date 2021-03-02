@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogViewExample", "LogViewEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogViewExample.Testing", "LogViewExample.Testing\LogViewExample.Testing.csproj", "{89A0B587-BC3A-44CF-BAD8-30980A8BCFF7}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LogViewInstaller", "LogViewInstaller\LogViewInstaller.vdproj", "{989AC575-38FE-4A60-96F2-7578F7DA5F40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,8 @@ Global
 		{89A0B587-BC3A-44CF-BAD8-30980A8BCFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89A0B587-BC3A-44CF-BAD8-30980A8BCFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89A0B587-BC3A-44CF-BAD8-30980A8BCFF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{989AC575-38FE-4A60-96F2-7578F7DA5F40}.Debug|Any CPU.ActiveCfg = Debug
+		{989AC575-38FE-4A60-96F2-7578F7DA5F40}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
